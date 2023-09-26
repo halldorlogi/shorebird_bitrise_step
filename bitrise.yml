@@ -1,0 +1,51 @@
+format_version: "11"
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+
+app:
+  envs:
+  - ORIGIN_SOURCE_DIR: $BITRISE_SOURCE_DIR
+  - shorebird_cli_token: $SHOREBIRD_CLI_TOKEN
+
+workflows:
+  sample:
+    envs:
+    - SAMPLE_APP_URL: https://github.com/chillbrodev/bitrise-shorebird-sample-app.git
+    steps:
+    - script:
+        inputs:
+        - content: |-
+            #!/bin/env bash
+            set -ex
+            rm -rf ./_tmp
+    - script:
+        inputs:
+        - content: |-
+            #!/bin/env bash
+            set -ex
+            curl --proto '=https' --tlsv1.2 https://raw.githubusercontent.com/shorebirdtech/install/main/install.sh -sSf --force | bash 
+    - git::https://github.com/bitrise-steplib/bitrise-step-simple-git-clone.git:
+        inputs:
+        - repository_url: $SAMPLE_APP_URL
+        - branch: main
+        - clone_into_dir: ./_tmp
+    - path::./:
+        inputs:
+        - project_location: ./_tmp
+        - is_debug_mode: "true"
+        - platform: both
+        - android_output_type: appbundle
+        - shorebird_cli_token: $SHOREBIRD_CLI_TOKEN
+
+  check:
+    steps:
+    - git::https://github.com/bitrise-steplib/steps-check.git: { }
+
+  e2e:
+    steps:
+    - git::https://github.com/bitrise-steplib/steps-check.git:
+        inputs:
+        - workflow: e2e
+
+  generate-readme:
+    steps:
+    - git::https://github.com/bitrise-steplib/steps-readme-generator.git@main: { }
