@@ -32,8 +32,9 @@ workflows:
         inputs:
         - project_location: ./_tmp
         - is_debug_mode: "true"
-        - platform: both
+        - platform: android
         - android_output_type: appbundle
+        - android_additional_params: ""
         - shorebird_cli_token: $SHOREBIRD_CLI_TOKEN
 
   check:

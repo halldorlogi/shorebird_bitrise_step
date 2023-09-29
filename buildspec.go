@@ -20,12 +20,31 @@ import (
 )
 
 type buildSpecification struct {
-	displayName          string
-	platformOutputType   OutputType
-	platformSelectors    []string
-	outputPathPatterns   []string
-	additionalParameters string
-	projectLocation      string
+	displayName           string
+	platformOutputType    OutputType
+	shorebirdPlatformType ShorebirdPlatformType
+	platformSelectors     []string
+	outputPathPatterns    []string
+	additionalParameters  string
+	projectLocation       string
+}
+
+func find(a []string, x string) int {
+	for i, n := range a {
+		if x == n {
+			return i
+		}
+	}
+	return -1
+}
+
+func contains(a []string, x string) bool {
+	for _, n := range a {
+		if x == n {
+			return true
+		}
+	}
+	return false
 }
 
 func (spec buildSpecification) exportArtifacts(artifacts []string) error {
@@ -194,21 +213,35 @@ func (spec buildSpecification) build(params string) error {
 	var errorWriter io.Writer = os.Stderr
 	var errBuffer bytes.Buffer
 
-	var platformCmd string
-	switch spec.platformOutputType {
-	case OutputTypeIOSApp:
-		platformCmd = "ios" // $ flutter build ios -> .app output
-	case OutputTypeArchive:
-		platformCmd = "ipa" // $ flutter build ipa -> .xcarchive output
-	default:
-		platformCmd = string(spec.platformOutputType)
-	}
-
 	if spec.platformOutputType == OutputTypeIOSApp {
 		paramSlice = append(paramSlice, "--no-codesign")
 	}
 
-	buildCmd := command.New("shorebird", append([]string{"build", platformCmd}, paramSlice...)...).SetStdout(os.Stdout)
+	log.Donef("$ paramSlice %s", paramSlice)
+
+	var shorebirdParams []string
+	shorebirdParams = append(shorebirdParams, []string{"release", string(spec.shorebirdPlatformType)}...)
+
+	if contains(paramSlice, "--flavor") {
+		index := find(paramSlice, "--flavor") + 1
+		shorebirdParams = append(shorebirdParams, []string{"--flavor", paramSlice[index]}...)
+	}
+
+	if contains(paramSlice, "-t") {
+		targetIndex := find(paramSlice, "-t") + 1
+		shorebirdParams = append(shorebirdParams, []string{"-t", paramSlice[targetIndex]}...)
+	}
+
+	if contains(paramSlice, "--target") {
+		targetIndex := find(paramSlice, "--target") + 1
+		shorebirdParams = append(shorebirdParams, []string{"--target", paramSlice[targetIndex]}...)
+	}
+
+	shorebirdParams = append(shorebirdParams, []string{"--force", "--"}...)
+	shorebirdParams = append(shorebirdParams, paramSlice...)
+
+	log.Donef("$ shorebirdParams %s", shorebirdParams)
+	buildCmd := command.New("shorebird", shorebirdParams...).SetStdout(os.Stdout)
 
 	if spec.platformOutputType == OutputTypeIOSApp || spec.platformOutputType == OutputTypeArchive {
 		buildCmd.SetStdin(strings.NewReader("a")) // if the CLI asks to input the selected identity we force it to be aborted

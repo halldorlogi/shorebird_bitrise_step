@@ -144,12 +144,12 @@ inputs:
     title: Codesign Identity
     summary: Override codesign identity in .flutter_settings
     description: Override codesign identity in .flutter_settings
-- ios_additional_params: --release
+- ios_additional_params: ""
   opts:
     category: iOS Platform Configs
     title: Additional parameters
-    summary: The flags from this input field will be appended to the `flutter build ios` or `flutter build ipa` command.
-    description: The flags from this input field will be appended to the `flutter build ios` command.
+    summary: The flags from this input field will be appended to the `shorebird release ios-alpha` command.
+    description: The flags from this input field will be appended to the `shorebird release ios-alpha` command.
 - ios_output_pattern: |-
     *build/ios/iphoneos/*.app
     *build/ios/archive/*.xcarchive
@@ -170,12 +170,12 @@ inputs:
     value_options:
     - apk
     - appbundle
-- android_additional_params: --release
+- android_additional_params: ""
   opts:
     category: Android Platform Configs
     title: Additional parameters
-    summary: The flags from this input field will be appended to the `flutter build apk` command.
-    description: The flags from this input field will be appended to the `flutter build apk` command.
+    summary: The flags from this input field will be appended to the `shorebird release android` command.
+    description: The flags from this input field will be appended to the `shorebird release android` command.
 - android_output_pattern: |-
     *build/app/outputs/apk/*/*.apk
     *build/app/outputs/bundle/*/*.aab

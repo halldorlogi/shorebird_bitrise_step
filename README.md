@@ -4,6 +4,10 @@ This step will build a Flutter project using [Shorebird](https://shorebird.dev).
 
 CURRENTLY IN DEVELOPMENT
 
+## Platform Support
+- Android
+- iOS (In Progress)
+
 
 ## How to use this Step
 

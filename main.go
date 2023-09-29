@@ -17,10 +17,14 @@ import (
 )
 
 type OutputType string
+type ShorebirdPlatformType string
 
 const (
 	codesignField  = "ios-signing-cert"
 	noCodesignFlag = "--no-codesign"
+
+	ShorebirdPlatformTypeIOS     ShorebirdPlatformType = "ios-alpha"
+	ShorebirdPlatformTypeAndroid ShorebirdPlatformType = "android"
 
 	OutputTypeAPK       OutputType = "apk"
 	OutputTypeAppBundle OutputType = "appbundle"
@@ -36,7 +40,7 @@ type config struct {
 	ProjectLocation       string `env:"project_location,dir"`
 	Platform              string `env:"platform,opt[both,ios,android]"`
 	AdditionalBuildParams string `env:"additional_build_params"`
-	ShorebirdCiToken	  string `env:"shorebird_cli_token"`
+	ShorebirdCiToken      string `env:"shorebird_cli_token"`
 	DebugMode             bool   `env:"is_debug_mode,opt[true,false]"`
 	CacheLevel            string `env:"cache_level,opt[all,none]"`
 
@@ -48,24 +52,11 @@ type config struct {
 	AndroidOutputType       OutputType `env:"android_output_type,opt[apk,appbundle]"`
 	AndroidAdditionalParams string     `env:"android_additional_params"`
 	AndroidExportPattern    []string   `env:"android_output_pattern,multiline"`
-
-	// Deprecated
-	AndroidBundleExportPattern []string `env:"android_bundle_output_pattern,multiline"`
 }
 
 func failf(msg string, args ...interface{}) {
 	log.Errorf(msg, args...)
 	os.Exit(1)
-}
-
-func handleDeprecatedInputs(cfg *config) {
-	if len(cfg.AndroidBundleExportPattern) > 0 && cfg.AndroidBundleExportPattern[0] != "*build/app/outputs/bundle/*/*.aab" {
-		log.Warnf("step input 'App bundle output pattern' (android_bundle_output_pattern) is deprecated and will be removed on 20 November 2019, use 'Output (.apk, .aab) pattern' (android_output_pattern) instead!")
-		log.Printf("Using 'App bundle output pattern' (android_bundle_output_pattern) instead of 'Output (.apk, .aab) pattern' (android_output_pattern).")
-		log.Printf("If you don't want to use 'App bundle output pattern' (android_bundle_output_pattern), empty it's value.")
-
-		cfg.AndroidExportPattern = cfg.AndroidBundleExportPattern
-	}
 }
 
 func main() {
@@ -74,7 +65,6 @@ func main() {
 		failf("Process config: failed to parse input: %s", err)
 	}
 	stepconf.Print(cfg)
-	handleDeprecatedInputs(&cfg)
 	log.SetEnableDebugLog(cfg.DebugMode)
 
 	projectLocationAbs, err := filepath.Abs(cfg.ProjectLocation)
@@ -170,18 +160,20 @@ build:
 
 	buildSpecifications := []buildSpecification{
 		{
-			displayName:          "iOS app",
-			platformOutputType:   cfg.IOSOutputType,
-			platformSelectors:    []string{"both", "ios"},
-			outputPathPatterns:   cfg.IOSExportPattern,
-			additionalParameters: cfg.AdditionalBuildParams + " " + cfg.IOSAdditionalParams,
+			displayName:           "iOS app",
+			platformOutputType:    cfg.IOSOutputType,
+			platformSelectors:     []string{"both", "ios"},
+			outputPathPatterns:    cfg.IOSExportPattern,
+			shorebirdPlatformType: ShorebirdPlatformTypeIOS,
+			additionalParameters:  cfg.AdditionalBuildParams + " " + cfg.IOSAdditionalParams,
 		},
 		{
-			displayName:          "Android app",
-			platformOutputType:   cfg.AndroidOutputType,
-			platformSelectors:    []string{"both", "android"},
-			outputPathPatterns:   cfg.AndroidExportPattern,
-			additionalParameters: cfg.AdditionalBuildParams + " " + cfg.AndroidAdditionalParams,
+			displayName:           "Android app",
+			platformOutputType:    cfg.AndroidOutputType,
+			platformSelectors:     []string{"both", "android"},
+			outputPathPatterns:    cfg.AndroidExportPattern,
+			shorebirdPlatformType: ShorebirdPlatformTypeAndroid,
+			additionalParameters:  cfg.AdditionalBuildParams + " " + cfg.AndroidAdditionalParams,
 		},
 	}
 
