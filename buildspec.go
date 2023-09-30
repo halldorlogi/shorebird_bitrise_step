@@ -47,6 +47,15 @@ func contains(a []string, x string) bool {
 	return false
 }
 
+func remove[T comparable](l []T, item T) []T {
+	for i, other := range l {
+		if other == item {
+			return append(l[:i], l[i+1:]...)
+		}
+	}
+	return l
+}
+
 func (spec buildSpecification) exportArtifacts(artifacts []string) error {
 	deployDir := os.Getenv("BITRISE_DEPLOY_DIR")
 	switch spec.platformOutputType {
@@ -223,22 +232,43 @@ func (spec buildSpecification) build(params string) error {
 	shorebirdParams = append(shorebirdParams, []string{"release", string(spec.shorebirdPlatformType)}...)
 
 	if contains(paramSlice, "--flavor") {
-		index := find(paramSlice, "--flavor") + 1
-		shorebirdParams = append(shorebirdParams, []string{"--flavor", paramSlice[index]}...)
+		flavorIndex := find(paramSlice, "--flavor") + 1
+		flavorVal := paramSlice[flavorIndex]
+		shorebirdParams = append(shorebirdParams, []string{"--flavor", flavorVal}...)
+		paramSlice = remove(paramSlice, "--flavor")
+		paramSlice = remove(paramSlice, flavorVal)
 	}
 
 	if contains(paramSlice, "-t") {
 		targetIndex := find(paramSlice, "-t") + 1
-		shorebirdParams = append(shorebirdParams, []string{"-t", paramSlice[targetIndex]}...)
+		targetVal := paramSlice[targetIndex]
+		shorebirdParams = append(shorebirdParams, []string{"-t", targetVal}...)
+		paramSlice = remove(paramSlice, "-t")
+		paramSlice = remove(paramSlice, targetVal)
 	}
 
 	if contains(paramSlice, "--target") {
 		targetIndex := find(paramSlice, "--target") + 1
-		shorebirdParams = append(shorebirdParams, []string{"--target", paramSlice[targetIndex]}...)
+		targetVal := paramSlice[targetIndex]
+		shorebirdParams = append(shorebirdParams, []string{"--target", targetVal}...)
+		paramSlice = remove(paramSlice, "--target")
+		paramSlice = remove(paramSlice, targetVal)
 	}
 
-	shorebirdParams = append(shorebirdParams, []string{"--force", "--"}...)
-	shorebirdParams = append(shorebirdParams, paramSlice...)
+	if contains(paramSlice, "--no-codesign") {
+		shorebirdParams = append(shorebirdParams, []string{"--no-codesign"}...)
+		paramSlice = remove(paramSlice, "--no-codesign")
+	}
+
+	shorebirdParams = append(shorebirdParams, []string{"--verbose"}...)
+
+	if spec.platformOutputType == OutputTypeAPK {
+		shorebirdParams = append(shorebirdParams, "--artifact=apk")
+	}
+	if len(paramSlice) != 0 {
+		shorebirdParams = append(shorebirdParams, "--")
+		shorebirdParams = append(shorebirdParams, paramSlice...)
+	}
 
 	log.Donef("$ shorebirdParams %s", shorebirdParams)
 	buildCmd := command.New("shorebird", shorebirdParams...).SetStdout(os.Stdout)
