@@ -1,9 +1,9 @@
 title: |-
   Shorebird Release
 summary: |
-  Builds a Shorebird Flutter Release for iOS & Android.
+  Builds a Shorebird Flutter Release for Android. iOS support is in progress but not yet ready.
 description: |-
-  This Step builds an iOS and an Android app using [Shorebird](https://shorebird.dev/). If you are not using Shorebird, then do not use this step. 
+  This Step builds an Android app using [Shorebird](https://shorebird.dev/). If you are not using Shorebird, then do not use this step. 
   This Step forks the [Flutter Build Bitrise step](https://github.com/bitrise-steplib/bitrise-step-flutter-build) but uses the Shorebird CLI instead to create a Flutter release.
 
   By default the Step builds the artifact based on the platform the scanner detects.
@@ -80,15 +80,13 @@ inputs:
     description: In order to authenticate with Shorebird in CI, you will need a CI token.
     is_sensitive: true
     is_required: true
-- platform: both
+- platform: android
   opts:
     title: Platform
-    summary: The selected platform will be built, or both iOS and Android if you select both
-    description: The selected platform will be built, or both iOs and Android if you select both
+    summary: The selected platform will be built. Currently only Android is supported.
+    description: The selected platform will be built. Currently only Android is supported.
     is_required: true
     value_options:
-    - both
-    - ios
     - android
 - additional_build_params: ""
   opts:
