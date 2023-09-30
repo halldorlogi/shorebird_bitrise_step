@@ -1,12 +1,10 @@
 # Shorebird Release
 
-This step will build a Flutter project using [Shorebird](https://shorebird.dev). Majority of credit for this step goes to the Bitrise team. This Shorebird Release step forks the Flutter Build step in order to make using Shorebird a "drop-in" replacement step. 
-
-CURRENTLY IN DEVELOPMENT
+This step will build a Flutter project using [Shorebird](https://shorebird.dev). Majority of credit for this step goes to the Bitrise team. This Shorebird Release step adapts the Flutter Build step in order to make using Shorebird a "drop-in" replacement step. 
 
 ## Platform Support
 - Android
-- iOS (In Progress)
+- iOS (Planned/In Progress)
 
 
 ## How to use this Step
