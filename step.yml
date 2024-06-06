@@ -80,14 +80,16 @@ inputs:
     description: In order to authenticate with Shorebird in CI, you will need a CI token.
     is_sensitive: true
     is_required: true
-- platform: android
+- platform: both
   opts:
     title: Platform
-    summary: The selected platform will be built. Currently only Android is supported.
-    description: The selected platform will be built. Currently only Android is supported.
+    summary: The selected platform will be built.
+    description: The selected platform will be built.
     is_required: true
     value_options:
     - android
+    - ios
+    - both
 - additional_build_params: ""
   opts:
     title: Additional params for flutter build
