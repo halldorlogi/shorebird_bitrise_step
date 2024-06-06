@@ -32,9 +32,8 @@ workflows:
         inputs:
         - project_location: ./_tmp
         - is_debug_mode: "true"
-        - platform: android
+        - platform: both
         - android_output_type: apk
-        # - additional_build_params: "--flavor dev"
         - additional_build_params: ""
         - shorebird_cli_token: $SHOREBIRD_CLI_TOKEN
 
