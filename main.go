@@ -38,7 +38,7 @@ var errCodeSign = errors.New("CODESIGN")
 
 type config struct {
 	ProjectLocation       string `env:"project_location,dir"`
-	Platform              string `env:"platform,opt[android, ios, both]"`
+	Platform              string `env:"platform,opt[both,ios,android]"`
 	AdditionalBuildParams string `env:"additional_build_params"`
 	ShorebirdCiToken      string `env:"shorebird_cli_token"`
 	DebugMode             bool   `env:"is_debug_mode,opt[true,false]"`
