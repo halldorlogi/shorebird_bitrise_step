@@ -23,7 +23,7 @@ const (
 	codesignField  = "ios-signing-cert"
 	noCodesignFlag = "--no-codesign"
 
-	ShorebirdPlatformTypeIOS     ShorebirdPlatformType = "ios-alpha"
+	ShorebirdPlatformTypeIOS     ShorebirdPlatformType = "ios"
 	ShorebirdPlatformTypeAndroid ShorebirdPlatformType = "android"
 
 	OutputTypeAPK       OutputType = "apk"

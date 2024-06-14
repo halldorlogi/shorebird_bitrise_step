@@ -18,7 +18,7 @@ description: |-
 
   #### Configuring for an iOS app
   1. Make sure the **Platform input** is set to `iOS` or `both`.
-  2. In **Codesign Identity** you can onverride the code signing identities that you set in Flutter.
+  2. In **Codesign Identity** you can override the code signing identities that you set in Flutter.
   3. In **Additional parameters** add any flag to customize your build (for example, the `--release` flag appended to `flutter build io` builds a deployable iOS app).
   4. Leave the **Output pattern** input's default value as is or modify it to the pattern if your build artifacts are stored elsewhere.
   5. Make sure you have the **Xcode Archive & Export for iOS** Step after the **Flutter Build** Step in your Workflow.
