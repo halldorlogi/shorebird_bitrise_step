@@ -4,7 +4,7 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 app:
   envs:
   - ORIGIN_SOURCE_DIR: $BITRISE_SOURCE_DIR
-  - shorebird_cli_token: $SHOREBIRD_CLI_TOKEN
+  - SHOREBIRD_TOKEN: $SHOREBIRD_CLI_TOKEN
 
 workflows:
   sample:

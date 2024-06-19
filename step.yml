@@ -92,10 +92,10 @@ inputs:
     - both
 - additional_build_params: ""
   opts:
-    title: Additional params for flutter build
-    summary: Additional params for flutter build
+    title: Additional params for shorebird release
+    summary: Additional params for shorebird release
     description: |-
-      Additional params for flutter build.
+      Additional params for shorebird release.
 
       Example: you can specify a Build Number for `flutter build`
       via the `--build-number` flutter build param.
@@ -148,8 +148,8 @@ inputs:
   opts:
     category: iOS Platform Configs
     title: Additional parameters
-    summary: The flags from this input field will be appended to the `shorebird release ios-alpha` command.
-    description: The flags from this input field will be appended to the `shorebird release ios-alpha` command.
+    summary: The flags from this input field will be appended to the `shorebird release` command.
+    description: The flags from this input field will be appended to the `shorebird release` command.
 - ios_output_pattern: |-
     *build/ios/iphoneos/*.app
     *build/ios/archive/*.xcarchive
