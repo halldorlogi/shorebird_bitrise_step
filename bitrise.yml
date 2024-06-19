@@ -4,7 +4,7 @@ default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 app:
   envs:
   - ORIGIN_SOURCE_DIR: $BITRISE_SOURCE_DIR
-  - SHOREBIRD_TOKEN: $SHOREBIRD_CLI_TOKEN
+  - shorebird_cli_token: $SHOREBIRD_CLI_TOKEN
 
 workflows:
   sample:
@@ -43,6 +43,14 @@ workflows:
 
   e2e:
     steps:
+    - script:
+        inputs:
+        - content: |-
+            #!/bin/env bash
+            set -ex
+            echo "Running E2E tests"
+            echo "SHOREBIRD CLI TOKEN: ${SHOREBIRD_CLI_TOKEN}"
+            export SHOREBIRD_TOKEN=${SHOREBIRD_CLI_TOKEN}
     - git::https://github.com/bitrise-steplib/steps-check.git:
         inputs:
         - workflow: e2e
