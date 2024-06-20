@@ -9,7 +9,7 @@ app:
 workflows:
   sample:
     envs:
-    - SAMPLE_APP_URL: https://github.com/chillbrodev/bitrise-shorebird-sample-app.git
+    - SAMPLE_APP_URL: https://github.com/halldorlogi/bitrise-shorebird-sample-app.git
     steps:
     - script:
         inputs:
@@ -48,9 +48,7 @@ workflows:
         - content: |-
             #!/bin/env bash
             set -ex
-            echo "Running E2E tests"
-            echo "SHOREBIRD CLI TOKEN: ${SHOREBIRD_CLI_TOKEN}"
-            export SHOREBIRD_TOKEN=${SHOREBIRD_CLI_TOKEN}
+            echo "Running E2E"
     - git::https://github.com/bitrise-steplib/steps-check.git:
         inputs:
         - workflow: e2e
