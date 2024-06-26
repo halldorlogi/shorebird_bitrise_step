@@ -222,10 +222,7 @@ func (spec buildSpecification) build(params string) error {
 	var errorWriter io.Writer = os.Stderr
 	var errBuffer bytes.Buffer
 
- 	if spec.platformOutputType == OutputTypeIOSApp {
-		paramSlice = append(paramSlice, "--no-codesign")
-	} 
-
+    paramSlice = append(paramSlice, "--no-codesign")
 	log.Donef("$ paramSlice %s", paramSlice)
 
 	var shorebirdParams []string
